@@ -12,17 +12,20 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     this.obscureText = false,
     required this.hintText,
-    this.suffixIcon,
-    this.prefixIcon,
+    required this.suffixIcon,
+    required this.prefixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: TextField(
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
+          border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
           hintText: hintText,
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,

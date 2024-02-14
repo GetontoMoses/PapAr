@@ -10,7 +10,7 @@ class CustomText extends StatelessWidget {
   const CustomText({
     super.key,
     required this.label,
-    this.fontsize = 18,
+    this.fontsize = 20,
     this.labelcolor = appBlackColor,
     this.fontWeight = FontWeight.normal,
   });

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:public_repo/views/signup.dart';
-import 'package:public_repo/views/dashboard.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:public_repo/utils/route.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: Dashboard(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(GetMaterialApp(
+      initialRoute: '/',
+      debugShowCheckedModeBanner: false,
+      getPages: Routes.routes));
 }

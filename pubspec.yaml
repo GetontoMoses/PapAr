@@ -7,8 +7,10 @@ environment:
   sdk: '>=3.2.4 <4.0.0'
 
 dependencies:
+  floating_bottom_navigation_bar: ^1.5.2
   flutter:
     sdk: flutter
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

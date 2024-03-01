@@ -5,6 +5,7 @@ import 'package:public_repo/configs/constants.dart';
 class CustomButton extends StatelessWidget {
   final String label;
   final Function onPressed;
+  final VoidCallback? action;
   final Color buttonColor;
   final double width;
 
@@ -14,18 +15,21 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     this.buttonColor = appGrayColor,
     this.width = 18,
+    this.action,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: action,
       child: CustomText(
         label: label,
         labelcolor: Colors.white,
       ),
       style: ElevatedButton.styleFrom(
-          backgroundColor: buttonColor, minimumSize: Size(width, 50)),
+        backgroundColor: buttonColor,
+        minimumSize: Size(width, 50),
+      ),
     );
   }
 }

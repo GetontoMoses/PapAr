@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:public_repo/configs/constants.dart';
+
 import 'package:public_repo/controllers/HomeController.dart';
 import 'package:public_repo/views/Dashboard.dart';
-import 'package:public_repo/views/customButton.dart';
-import 'package:public_repo/views/customtext.dart';
-import 'package:public_repo/views/customtextField.dart';
+
 import 'package:public_repo/views/downloads.dart';
 import 'package:public_repo/views/search.dart';
+import 'package:public_repo/views/trial2.dart';
+import 'package:public_repo/views/trialX.dart';
 
 HomeController homeController = Get.put(HomeController());
-var Screen = [Dashboard(), Search(), Downloads()];
+var Screen = [Dashboard(), Search(), Trial()];
 
 class Home extends StatelessWidget {
   const Home({super.key});

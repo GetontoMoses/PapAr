@@ -11,19 +11,19 @@ Widget head() {
         children: [
           Container(
             width: double.infinity,
-            height: 290,
+            height: 843,
             decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 39, 124, 124),
+              color: Color.fromRGBO(67, 123, 124, 1),
             ),
             child: Stack(
-              children: [
+              children: [ 
                 Padding(
                   padding: EdgeInsets.only(top: 40, left: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: 70,
+                        height: 30,
                       ),
                       Center(
                         child: CustomText(

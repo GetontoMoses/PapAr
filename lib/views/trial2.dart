@@ -4,14 +4,14 @@ import 'package:public_repo/views/customtextField.dart';
 import 'package:public_repo/views/customButton.dart';
 import 'package:get/get.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
   bool isPasswordVisible = false;
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -60,11 +60,17 @@ class _LoginState extends State<Login> {
                   Padding(
                     padding: EdgeInsets.only(top: 30, bottom: 20),
                     child: CustomText(
-                      label: 'Login to your account',
+                      label: 'Create account',
                       fontsize: 25,
                       fontWeight: FontWeight.bold,
                       labelcolor: Colors.black,
                     ),
+                  ),
+                  CustomTextField(
+                    controller: usernameController,
+                    hintText: "Enter Username",
+                    prefixIcon: Icon(Icons.person),
+                    suffixIcon: Icon(null),
                   ),
                   CustomTextField(
                     controller: usernameController,
@@ -89,10 +95,24 @@ class _LoginState extends State<Login> {
                       });
                     },
                   ),
+                  CustomTextField(
+                    controller: passwordController,
+                    hintText: "Confirm Password",
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: Icon(isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    togglePasswordVisibility: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                    obscureText: !isPasswordVisible,
+                  ),
                   const SizedBox(height: 20),
                   CustomButton(
                     onPressed: () {},
-                    label: ("Login"),
+                    label: ("Sign Up"),
                     buttonColor: Color.fromARGB(255, 39, 124, 124),
                     width: 25,
                     action: navigateToDashboard,
@@ -103,48 +123,21 @@ class _LoginState extends State<Login> {
                     child: Row(
                       children: [
                         CustomText(
-                            label: "Don't have an account? ",
-                            labelcolor: Colors.black),
+                            label: "Have an account? ",
+                            labelcolor: Colors.black,
+                          fontsize: 21,
+                        ),
+                          
                         CustomText(
-                          label: "Signup",
+                          label: "Login",
                           labelcolor: Color.fromARGB(255, 6, 124, 221),
-                          onTap: navigateToSignup,
+                          onTap: navigateToLogin,
+                          fontsize: 21,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: Colors.black,
-                          thickness: 1.5,
-                          height: 20,
-                          indent: 20,
-                          endIndent: 8,
-                        ),
-                      ),
-                      CustomText(
-                        label: "Login with",
-                        labelcolor: Colors.black,
-                        fontsize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: Colors.black,
-                          thickness: 1.5,
-                          height: 20,
-                          indent: 8,
-                          endIndent: 20,
-                        ),
-                      ),
-                    ],
-                  ),
+                  
                 ],
               ),
             ),
@@ -154,8 +147,8 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void navigateToSignup() {
-    Get.toNamed("/signup");
+  void navigateToLogin() {
+    Get.toNamed("/");
   }
 
   void navigateToDashboard() {

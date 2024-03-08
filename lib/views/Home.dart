@@ -10,7 +10,7 @@ import 'package:public_repo/views/trial2.dart';
 import 'package:public_repo/views/trialX.dart';
 
 HomeController homeController = Get.put(HomeController());
-var Screen = [Dashboard(), Search(), Trial()];
+var Screen = [Dashboard(), Search(), Downloads()];
 
 class Home extends StatelessWidget {
   const Home({super.key});

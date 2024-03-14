@@ -42,10 +42,13 @@ class _LoginState extends State<Login> {
               ),
             ),
             Container(
-              padding: const EdgeInsets.only(top: 220, left: 15),
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.2,
+                left: MediaQuery.of(context).size.width * 0.04,
+                right: MediaQuery.of(context).size.width * 0.04,
+              ),
               child: Container(
-                height: 600,
-                width: 385,
+                height: MediaQuery.of(context).size.height * 0.77,
                 margin: EdgeInsets.only(top: 15),
                 decoration: BoxDecoration(
                   boxShadow: const [
@@ -104,20 +107,18 @@ class _LoginState extends State<Login> {
                         action: navigateToDashboard,
                       ),
                       SizedBox(height: 25),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 50),
-                        child: Row(
-                          children: [
-                            CustomText(
-                                label: "Don't have an account? ",
-                                labelcolor: Colors.black),
-                            CustomText(
-                              label: "Signup",
-                              labelcolor: Color.fromARGB(255, 6, 124, 221),
-                              onTap: navigateToSignup,
-                            ),
-                          ],
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomText(
+                              label: "Don't have an account? ",
+                              labelcolor: Colors.black),
+                          CustomText(
+                            label: "Signup",
+                            labelcolor: Color.fromARGB(255, 6, 124, 221),
+                            onTap: navigateToSignup,
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 50,

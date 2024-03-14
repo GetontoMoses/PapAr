@@ -27,28 +27,33 @@ class _SignUpState extends State<SignUp> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 300,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 7, 48, 46),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15),
+            Positioned.fill(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 300,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 7, 48, 46),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15),
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
             Container(
               child: Padding(
-                padding: const EdgeInsets.only(top: 220, left: 15),
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.2,
+                  left: MediaQuery.of(context).size.width * 0.04,
+                  right: MediaQuery.of(context).size.width * 0.04,
+                ),
                 child: Container(
-                  height: 600,
-                  width: 385,
+                  height: MediaQuery.of(context).size.height * 0.8,
                   margin: EdgeInsets.only(top: 15),
                   decoration: BoxDecoration(
                     boxShadow: const [
@@ -130,6 +135,7 @@ class _SignUpState extends State<SignUp> {
                         Padding(
                           padding: const EdgeInsets.only(left: 50),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CustomText(
                                 label: "Have an account? ",

@@ -34,11 +34,15 @@ class _SignUpState extends State<SignUp> {
                   Container(
                     width: double.infinity,
                     height: 300,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 7, 48, 46),
+                    child: ClipRRect(
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(15),
                         bottomRight: Radius.circular(15),
+                      ),
+                      child: Image.asset(
+                        'assets/images/papAr1.jpeg',
+                        fit: BoxFit.cover,
+                        height: MediaQuery.of(context).size.height * 0.3,
                       ),
                     ),
                   )
@@ -48,12 +52,12 @@ class _SignUpState extends State<SignUp> {
             Container(
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.2,
+                  top: MediaQuery.of(context).size.height * 0.22,
                   left: MediaQuery.of(context).size.width * 0.04,
                   right: MediaQuery.of(context).size.width * 0.04,
                 ),
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.75,
                   margin: EdgeInsets.only(top: 15),
                   decoration: BoxDecoration(
                     boxShadow: const [
@@ -79,6 +83,9 @@ class _SignUpState extends State<SignUp> {
                             fontWeight: FontWeight.bold,
                             labelcolor: Colors.black,
                           ),
+                        ),
+                        SizedBox(
+                          height: 15,
                         ),
                         CustomTextField(
                           controller: usernameController,
@@ -132,24 +139,21 @@ class _SignUpState extends State<SignUp> {
                           action: navigateToDashboard,
                         ),
                         SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 50),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomText(
-                                label: "Have an account? ",
-                                labelcolor: Colors.black,
-                                fontsize: 21,
-                              ),
-                              CustomText(
-                                label: "Login",
-                                labelcolor: Color.fromARGB(255, 6, 124, 221),
-                                onTap: navigateToLogin,
-                                fontsize: 21,
-                              ),
-                            ],
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomText(
+                              label: "Have an account? ",
+                              labelcolor: Colors.black,
+                              fontsize: 21,
+                            ),
+                            CustomText(
+                              label: "Login",
+                              labelcolor: Color.fromARGB(255, 6, 124, 221),
+                              onTap: navigateToLogin,
+                              fontsize: 21,
+                            ),
+                          ],
                         ),
                       ],
                     ),

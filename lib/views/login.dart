@@ -18,6 +18,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color.fromRGBO(67, 123, 124, 1),
       body: SingleChildScrollView(
@@ -30,25 +32,29 @@ class _LoginState extends State<Login> {
                   Container(
                     width: double.infinity,
                     height: 300,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 7, 48, 46),
+                    child: ClipRRect(
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(15),
                         bottomRight: Radius.circular(15),
                       ),
+                      child: Image.asset(
+                        'assets/images/papAr1.jpeg',
+                        fit: BoxFit.cover,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
             Container(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.2,
+                top: MediaQuery.of(context).size.height * 0.22,
                 left: MediaQuery.of(context).size.width * 0.04,
                 right: MediaQuery.of(context).size.width * 0.04,
               ),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.77,
+                height: MediaQuery.of(context).size.height * 0.73,
                 margin: EdgeInsets.only(top: 15),
                 decoration: BoxDecoration(
                   boxShadow: const [
@@ -74,6 +80,9 @@ class _LoginState extends State<Login> {
                           fontWeight: FontWeight.bold,
                           labelcolor: Colors.black,
                         ),
+                      ),
+                      SizedBox(
+                        height: 15,
                       ),
                       CustomTextField(
                         controller: usernameController,

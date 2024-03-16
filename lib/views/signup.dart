@@ -22,7 +22,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(67, 123, 124, 1),
+      backgroundColor: Color.fromRGBO(177, 184, 184, 1),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Stack(
@@ -62,13 +62,13 @@ class _SignUpState extends State<SignUp> {
                   decoration: BoxDecoration(
                     boxShadow: const [
                       BoxShadow(
-                        color: Color.fromRGBO(47, 125, 121, 0.3),
+                        color: Color.fromRGBO(58, 100, 98, 0.298),
                         offset: Offset(0, 6),
                         blurRadius: 12,
                         spreadRadius: 6,
                       ),
                     ],
-                    color: Color.fromRGBO(200, 208, 206, 1),
+                    color: Color.fromRGBO(226, 237, 235, 1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
@@ -134,7 +134,7 @@ class _SignUpState extends State<SignUp> {
                         CustomButton(
                           onPressed: () {},
                           label: ("Sign Up"),
-                          buttonColor: Color.fromARGB(255, 39, 124, 124),
+                          buttonColor: Color.fromARGB(255, 45, 148, 105),
                           width: 25,
                           action: navigateToDashboard,
                         ),

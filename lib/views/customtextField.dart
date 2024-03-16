@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final Icon prefixIcon;
   final Color borderColor;
   final VoidCallback? togglePasswordVisibility;
+  final FormFieldValidator<String>? validator;
 
   const CustomTextField({
     super.key,
@@ -20,13 +21,14 @@ class CustomTextField extends StatelessWidget {
     required this.prefixIcon,
     this.borderColor = Colors.black,
     this.togglePasswordVisibility,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
@@ -42,6 +44,7 @@ class CustomTextField extends StatelessWidget {
           ),
           prefixIcon: prefixIcon,
         ),
+        validator: validator,
       ),
     );
   }

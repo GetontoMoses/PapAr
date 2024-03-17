@@ -218,8 +218,9 @@ class _SignUpState extends State<SignUp> {
       final String username = usernameController.text;
       final String email = emailController.text;
       final String password = passwordController.text;
+      final String confirmPassword = confirmpasswordController.text;
 
-      ApiService.signUp(username, email, password);
+      ApiService.signUp(username, email, password, confirmPassword);
       navigateToDashboard();
     }
   }

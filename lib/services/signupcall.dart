@@ -1,16 +1,17 @@
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'http://yourdomain.com'; // Your API base URL
+  static const String baseUrl = 'https://class-26.com/Getonto_Students/signup.php'; // Your API base URL
 
   static Future<void> signUp(
-      String username, String email, String password) async {
+      String username, String email, String password, String confirmPassword) async {
     final String signUpUrl = '$baseUrl/signup.php'; // Your sign up API endpoint
 
     final Map<String, String> data = {
       'username': username,
       'email': email,
       'password': password,
+      'confirm_password': confirmPassword,
     };
 
     try {

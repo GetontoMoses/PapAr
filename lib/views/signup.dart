@@ -139,7 +139,22 @@ class _SignUpState extends State<SignUp> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a password';
                               }
-                              // You can add password strength validation here if needed
+
+                              // Password strength validation rules
+                              if (value.length < 8) {
+                                return 'Password must be at least 8 characters long';
+                              }
+
+                              if (!RegExp(r'[a-z]').hasMatch(value)) {
+                                return 'Password must contain at least one lowercase letter';
+                              }
+
+                              if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
+                                  .hasMatch(value)) {
+                                return 'Password must contain at least one special character';
+                              }
+
+                              // Password meets all criteria, return null (no error)
                               return null;
                             },
                           ),
@@ -168,11 +183,12 @@ class _SignUpState extends State<SignUp> {
                           ),
                           const SizedBox(height: 20),
                           CustomButton(
-                            onPressed: () {_submitForm();},
+                            onPressed: () {
+                              _submitForm();
+                            },
                             label: ("Sign Up"),
                             buttonColor: Color.fromARGB(255, 45, 148, 105),
                             width: 25,
-                            
                           ),
                           SizedBox(height: 20),
                           Row(
@@ -217,7 +233,7 @@ class _SignUpState extends State<SignUp> {
       final String username = usernameController.text;
       final String email = emailController.text;
       final String password = passwordController.text;
-     
+
       Map<String, dynamic> userData = {
         'username': username,
         'email': email,
@@ -228,8 +244,7 @@ class _SignUpState extends State<SignUp> {
       String jsonData = jsonEncode(userData);
 
       // Convert your backend API URL string to a Uri object
-      Uri apiUrl = Uri.parse(
-          'http://10.42.0.150/student/signup/'); 
+      Uri apiUrl = Uri.parse('http://10.0.2.2:8000/student/signup/');
 
       // Make a POST request to your Django backend API
       try {
@@ -241,26 +256,49 @@ class _SignUpState extends State<SignUp> {
           body: jsonData,
         );
 
-        // Check if the request was successful (status code 200)
-        if (response.statusCode == 200) {
-          // Handle successful registration
-          // For example, navigate to dashboard
+        // if the request is successful
+        if (response.statusCode == 201) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Center(child: Text('Account created successfully')),
+              );
+            },
+          );
+
+          // Delay navigation to dashboard by 2 seconds (adjust as needed)
+          await Future.delayed(Duration(seconds: 1));
           navigateToDashboard();
         } else {
           // Handle other status codes (e.g., display error message)
-          // For example:
           print('Failed to register: ${response.body}');
+           showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Center(child: Text('Registration Failed')),
+                content: Text('User with this email already exists.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
         }
       } catch (error) {
-        // Handle errors (e.g., connection error)
-        // For example:
         print('Error registering user: $error');
       }
     }
   }
 
   bool _isValidEmail(String email) {
-    // Simple email validation using RegExp
+    // validation using RegExp
     final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     return emailRegex.hasMatch(email);
   }

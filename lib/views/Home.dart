@@ -6,7 +6,6 @@ import 'package:public_repo/views/Dashboard.dart';
 
 import 'package:public_repo/views/downloads.dart';
 import 'package:public_repo/views/search.dart';
-import 'package:public_repo/views/trial2.dart';
 import 'package:public_repo/views/trialX.dart';
 
 HomeController homeController = Get.put(HomeController());

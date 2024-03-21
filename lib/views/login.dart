@@ -3,6 +3,8 @@ import 'package:public_repo/views/customtext.dart';
 import 'package:public_repo/views/customtextField.dart';
 import 'package:public_repo/views/customButton.dart';
 import 'package:get/get.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -13,7 +15,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool isPasswordVisible = false;
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
@@ -83,7 +85,7 @@ class _LoginState extends State<Login> {
                         height: 15,
                       ),
                       CustomTextField(
-                        controller: usernameController,
+                        controller: emailController,
                         hintText: "Enter Email",
                         prefixIcon: Icon(Icons.person),
                         suffixIcon: Icon(null),
@@ -107,11 +109,11 @@ class _LoginState extends State<Login> {
                       ),
                       const SizedBox(height: 20),
                       CustomButton(
-                        onPressed: () {},
+                        onPressed: () {_login();},
                         label: ("Login"),
                         buttonColor: Color.fromARGB(255, 45, 148, 105),
                         width: 25,
-                        action: navigateToDashboard,
+                        
                       ),
                       SizedBox(height: 25),
                       Row(
@@ -176,5 +178,50 @@ class _LoginState extends State<Login> {
 
   void navigateToDashboard() {
     Get.offNamed("/home");
+  }
+  Future<void> _login() async {
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    // Your login API endpoint URL
+    final String apiUrl = 'http://10.42.0.150:8000/student/login/';
+
+    // Prepare the login data
+    final Map<String, dynamic> loginData = {
+      'email': email,
+      'password': password,
+    };
+
+    // Convert login data to JSON
+    final String jsonData = jsonEncode(loginData);
+
+    try {
+      // Make POST request to login endpoint
+      final http.Response response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonData,
+      );
+
+      // Check if login was successful (HTTP status code 200)
+      if (response.statusCode == 200) {
+        // Navigate to dashboard or perform any other actions upon successful login
+        navigateToDashboard();
+      } else {
+        // Handle login failure (e.g., display error message)
+        // For example:
+        print('Failed to login: ${response.body}');
+        // Display error message to the user
+        // showDialog(...);
+      }
+    } catch (error) {
+      // Handle errors (e.g., connection error)
+      // For example:
+      print('Error logging in: $error');
+      // Display error message to the user
+      // showDialog(...);
+    }
   }
 }

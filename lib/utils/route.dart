@@ -16,6 +16,6 @@ class Routes {
     GetPage(name: '/dashboard', page: () => Dashboard()),
     GetPage(name: '/search', page: () => Search()),
     GetPage(name: '/downloads', page: () => Downloads()),
-    GetPage(name: '/trial', page: () => Trial()),
+    //GetPage(name: '/trial', page: () => Trial()),
   ];
 }

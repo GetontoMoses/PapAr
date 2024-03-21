@@ -3,7 +3,8 @@ import 'package:public_repo/views/customtext.dart';
 import 'package:public_repo/views/customtextField.dart';
 import 'package:public_repo/views/customButton.dart';
 import 'package:get/get.dart';
-import 'package:public_repo/services/signupcall.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -167,11 +168,11 @@ class _SignUpState extends State<SignUp> {
                           ),
                           const SizedBox(height: 20),
                           CustomButton(
-                            onPressed: () {},
+                            onPressed: () {_submitForm();},
                             label: ("Sign Up"),
                             buttonColor: Color.fromARGB(255, 45, 148, 105),
                             width: 25,
-                            action: _submitForm,
+                            
                           ),
                           SizedBox(height: 20),
                           Row(
@@ -211,17 +212,50 @@ class _SignUpState extends State<SignUp> {
     Get.offNamed("/home");
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Form is valid, perform signup process
-      // Form is valid, call the API service to sign up
       final String username = usernameController.text;
       final String email = emailController.text;
       final String password = passwordController.text;
-      final String confirmPassword = confirmpasswordController.text;
+     
+      Map<String, dynamic> userData = {
+        'username': username,
+        'email': email,
+        'password': password,
+      };
 
-      ApiService.signUp(username, email, password, confirmPassword);
-      navigateToDashboard();
+      // Convert the data to JSON
+      String jsonData = jsonEncode(userData);
+
+      // Convert your backend API URL string to a Uri object
+      Uri apiUrl = Uri.parse(
+          'http://10.42.0.150/student/signup/'); 
+
+      // Make a POST request to your Django backend API
+      try {
+        final response = await http.post(
+          apiUrl,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonData,
+        );
+
+        // Check if the request was successful (status code 200)
+        if (response.statusCode == 200) {
+          // Handle successful registration
+          // For example, navigate to dashboard
+          navigateToDashboard();
+        } else {
+          // Handle other status codes (e.g., display error message)
+          // For example:
+          print('Failed to register: ${response.body}');
+        }
+      } catch (error) {
+        // Handle errors (e.g., connection error)
+        // For example:
+        print('Error registering user: $error');
+      }
     }
   }
 

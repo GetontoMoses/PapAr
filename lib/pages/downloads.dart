@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:public_repo/pages/Home.dart';
+import 'package:public_repo/pages/homeNot.dart';
 
 class Downloads extends StatefulWidget {
   const Downloads({super.key});
@@ -11,7 +11,7 @@ class Downloads extends StatefulWidget {
 class _DownloadsState extends State<Downloads> {
   @override
   Widget build(BuildContext context) {
-    return Home(
+    return Home_No_app(
       body: Column(
         children: [
           Container(

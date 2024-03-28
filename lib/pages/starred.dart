@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:public_repo/pages/Home.dart';
+import 'package:public_repo/pages/homeNot.dart';
 
 class Starred extends StatefulWidget {
   const Starred({super.key});
@@ -11,7 +11,7 @@ class Starred extends StatefulWidget {
 class _StarredState extends State<Starred> {
   @override
   Widget build(BuildContext context) {
-    return Home(
+    return Home_No_app(
       body: Column(
         children: [
           Container(

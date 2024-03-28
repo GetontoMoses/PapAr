@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:public_repo/views/customtext.dart';
 import 'package:public_repo/configs/constants.dart';
-import 'package:public_repo/views/customtextField.dart';
-import 'package:public_repo/views/customButton.dart';
-import 'package:public_repo/views/header.dart';
 
 class Downloads extends StatelessWidget {
   const Downloads({super.key});

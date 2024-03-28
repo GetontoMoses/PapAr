@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:public_repo/controllers/HomeController.dart';
 import 'package:public_repo/views/customtext.dart';
 import 'package:public_repo/configs/constants.dart';
 import 'package:public_repo/views/customtextField.dart';
 import 'package:public_repo/views/customButton.dart';
+import 'package:get/get.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key});
@@ -26,10 +28,6 @@ class Dashboard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 40, left: 10),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                      ),
                       SizedBox(
                         height: 20,
                       ),

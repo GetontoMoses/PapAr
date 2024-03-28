@@ -4,7 +4,7 @@ import 'package:public_repo/utils/route.dart';
 
 void main() {
   runApp(GetMaterialApp(
-      initialRoute: '/',
+      initialRoute: '/home',
       debugShowCheckedModeBanner: false,
       getPages: Routes.routes));
 }

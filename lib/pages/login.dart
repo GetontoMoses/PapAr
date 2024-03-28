@@ -200,7 +200,7 @@ class _LoginState extends State<Login> {
   }
 
   void navigateToDashboard() {
-    Get.offNamed("/home");
+    Get.offNamed("/dashboard");
   }
 
   Future<void> _login() async {

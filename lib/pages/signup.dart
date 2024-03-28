@@ -225,7 +225,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   void navigateToDashboard() {
-    Get.offNamed("/home");
+    Get.offNamed("/dashboard");
   }
 
   void _submitForm() async {

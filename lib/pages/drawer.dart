@@ -32,13 +32,33 @@ class MyDrawer extends StatelessWidget {
               child: ListTile(
                 leading: Icon(Icons.home),
                 title: CustomText(label: "Home"),
-                onTap: () => Navigator.of(context).pushNamed("/home"),
+                onTap: () => Navigator.of(context).pushNamed("/dashboard"),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.08,
+              ),
+              child: ListTile(
+                leading: Icon(Icons.person_2_rounded),
+                title: CustomText(label: "Profile"),
+                onTap: () => Navigator.of(context).pushNamed("/profile"),
               ),
             ),
             Divider(
               color: Colors.black,
               thickness: 0.6,
               height: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.08,
+              ),
+              child: ListTile(
+                leading: Icon(Icons.upload_file),
+                title: CustomText(label: "Upload a paper"),
+                onTap: () => Navigator.of(context).pushNamed("/upload"),
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -60,6 +80,11 @@ class MyDrawer extends StatelessWidget {
                 onTap: () => Navigator.of(context).pushNamed("/starred"),
               ),
             ),
+            Divider(
+              color: Colors.black,
+              thickness: 0.6,
+              height: 20,
+            ),
             Padding(
               padding: EdgeInsets.only(
                 left: MediaQuery.of(context).size.width * 0.08,
@@ -69,11 +94,6 @@ class MyDrawer extends StatelessWidget {
                 title: CustomText(label: "Settings"),
                 onTap: () => Navigator.of(context).pushNamed("/settings"),
               ),
-            ),
-            Divider(
-              color: Colors.black,
-              thickness: 0.6,
-              height: 20,
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -93,16 +113,6 @@ class MyDrawer extends StatelessWidget {
                 leading: Icon(Icons.chat_bubble_outlined),
                 title: CustomText(label: "Help & feedback"),
                 onTap: () => Navigator.of(context).pushNamed("/help"),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.08,
-              ),
-              child: ListTile(
-                leading: Icon(Icons.privacy_tip_rounded),
-                title: CustomText(label: "Privacy Policy"),
-                onTap: () => Navigator.of(context).pushNamed("/privacy"),
               ),
             ),
             Divider(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:public_repo/pages/Home.dart';
 
 class Starred extends StatefulWidget {
   const Starred({super.key});
@@ -10,6 +11,15 @@ class Starred extends StatefulWidget {
 class _StarredState extends State<Starred> {
   @override
   Widget build(BuildContext context) {
-    return const Column();
+    return Home(
+      body: Column(
+        children: [
+          Container(
+            height: 100,
+            color: Color.fromARGB(255, 192, 238, 6),
+          )
+        ],
+      ),
+    );
   }
 }

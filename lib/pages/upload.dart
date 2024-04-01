@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +11,6 @@ import 'package:public_repo/views/customButton.dart';
 import 'package:public_repo/views/customtext.dart';
 import 'package:public_repo/views/customtextField.dart';
 import 'package:public_repo/views/fab.dart';
-import 'package:file_picker/file_picker.dart';
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -248,6 +246,7 @@ class _UploadState extends State<Upload> {
     );
   }
 
+//function to access the gallery and select an image
   Future<File> getImage() async {
     final ImagePicker _picker = ImagePicker();
 
@@ -263,6 +262,8 @@ class _UploadState extends State<Upload> {
     }
   }
 
+
+//function to upload the paper
   void uploadPaper() {
     if (_formKey.currentState!.validate()) {
       print('Paper Name: ${papernameController.text}');

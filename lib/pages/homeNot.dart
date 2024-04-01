@@ -4,9 +4,7 @@ import 'package:get/get.dart';
 import 'package:public_repo/controllers/HomeController.dart';
 import 'package:public_repo/pages/dashboard.dart';
 import 'package:public_repo/pages/downloads.dart';
-import 'package:public_repo/pages/drawer.dart';
 import 'package:public_repo/pages/search.dart';
-import 'package:public_repo/views/customtext.dart';
 
 HomeController homeController = Get.put(HomeController());
 

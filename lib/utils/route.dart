@@ -12,6 +12,7 @@ import 'package:public_repo/pages/search.dart';
 import 'package:public_repo/pages/signup.dart';
 import 'package:public_repo/pages/upload.dart';
 
+
 class Routes {
   static var routes = [
     GetPage(name: '/', page: () => Login()),

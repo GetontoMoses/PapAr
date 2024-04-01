@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final Color borderColor;
   final VoidCallback? togglePasswordVisibility;
   final FormFieldValidator<String>? validator;
+  final TextCapitalization textCapitalization;
 
   const CustomTextField({
     super.key,
@@ -22,6 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.borderColor = Colors.black,
     this.togglePasswordVisibility,
     this.validator,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   @override
@@ -31,6 +33,7 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
+        textCapitalization: textCapitalization,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),

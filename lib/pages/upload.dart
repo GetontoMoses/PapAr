@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'dart:io';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:public_repo/pages/dashboard.dart';
+import 'package:public_repo/pages/downloads.dart';
 import 'package:public_repo/pages/homeNot.dart';
+import 'package:public_repo/pages/search.dart';
+import 'package:public_repo/views/action.dart';
 import 'package:public_repo/views/customButton.dart';
 import 'package:public_repo/views/customtext.dart';
 import 'package:public_repo/views/customtextField.dart';
+import 'package:public_repo/views/fab.dart';
+import 'package:file_picker/file_picker.dart';
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -12,108 +22,122 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  bool isPasswordVisible = false;
+  File? _selectedImage;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController papernameController = TextEditingController();
   final TextEditingController paperyearController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Home_No_app(
-        body: SingleChildScrollView(
-      child: Stack(children: [
-        Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 250,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(15),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        height: 30,
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Stack(children: [
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 250,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(15),
                       ),
-                      Center(
-                        child: CustomText(
-                          label: 'Upload a Paper',
-                          fontsize: 25,
-                          fontWeight: FontWeight.bold,
-                          labelcolor: Colors.white,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Center(
+                            child: CustomText(
+                              label: 'Upload a Paper',
+                              fontsize: 25,
+                              fontWeight: FontWeight.bold,
+                              labelcolor: Colors.white,
+                            ),
+                          ),
+                        ],
+                      )),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 39, 106, 126),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.23,
+                      right: MediaQuery.of(context).size.width * 0.05,
+                      left: MediaQuery.of(context).size.width * 0.05),
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        controller: papernameController,
+                        hintText: "Enter Name",
+                        prefixIcon: Icon(Icons.book_online),
+                        suffixIcon: Icon(null),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the Paper Name';
+                          }
+                          if (value.length < 6) {
+                            return 'Name must be at least 6 characters long';
+                          }
+                          final capitalized = value.toUpperCase();
+
+                          papernameController.text = capitalized;
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextField(
+                        controller: paperyearController,
+                        hintText: "Enter the Year",
+                        prefixIcon: Icon(Icons.calendar_month),
+                        suffixIcon: Icon(null),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the Year';
+                          }
+                          final RegExp regex = RegExp(
+                              r'^(JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\s+\d{4}$');
+                          if (!regex.hasMatch(value)) {
+                            return 'Invalid format. Please enter like "AUGUST 2023"';
+                          }
+                          final capitalized = value.toUpperCase();
+
+                          paperyearController.text = capitalized;
+                          return null;
+                        },
+                        textCapitalization: TextCapitalization.characters,
+                      ),
+                      SizedBox(height: 10),
+                      CustomButton(
+                        onPressed: () {
+                          uploadPaper();
+                        },
+                        label: ("Upload"),
+                        buttonColor: Color.fromARGB(255, 39, 106, 126),
+                        width: 5,
                       ),
                     ],
-                  )),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 41, 124, 90),
-              ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.28,
-                right: MediaQuery.of(context).size.width * 0.3,
-              ),
-              child: Column(
-                children: [
-                  CustomTextField(
-                    controller: papernameController,
-                    hintText: "Enter Name",
-                    prefixIcon: Icon(Icons.book_online),
-                    suffixIcon: Icon(null),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the Name';
-                      }
-
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CustomTextField(
-                    controller: paperyearController,
-                    hintText: "Enter the Year",
-                    prefixIcon: Icon(Icons.calendar_month),
-                    suffixIcon: Icon(null),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the Year';
-                      }
-
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  CustomButton(
-                    onPressed: () {
-                      if (_formKey.currentState != null) {}
-                    },
-                    label: ("Upload"),
-                    buttonColor: Color.fromARGB(255, 45, 148, 105),
-                    width: 5,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        Container(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.08,
-            left: MediaQuery.of(context).size.width * 0.03,
-            right: MediaQuery.of(context).size.width * 0.03,
           ),
-          child: Form(
-            key: _formKey,
+          Container(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 0.08,
+              left: MediaQuery.of(context).size.width * 0.03,
+              right: MediaQuery.of(context).size.width * 0.03,
+            ),
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.45,
+              height: MediaQuery.of(context).size.height * 0.42,
               width: MediaQuery.of(context).size.width * 1,
               margin: EdgeInsets.only(top: 15),
               decoration: BoxDecoration(
@@ -125,88 +149,104 @@ class _UploadState extends State<Upload> {
                     spreadRadius: 6,
                   ),
                 ],
-                color: Color.fromRGBO(226, 237, 235, 1),
+                color: Color.fromARGB(255, 215, 228, 226),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [],
+              child: Center(
+                child: _selectedImage != null
+                    ? Image.file(_selectedImage!)
+                    : Text(
+                        'No image selected',
+                        style: TextStyle(fontSize: 20),
+                      ),
               ),
-            ),
-          ),
-        ),
-        Column(children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.84,
-              left: MediaQuery.of(context).size.width * 0.76,
-            ),
-            child: FloatingActionButton(
-              onPressed: () {
-                showUploadOptions(context);
-              },
-              child: Icon(Icons.add),
-              backgroundColor: Color.fromARGB(255, 45, 148, 105),
-              foregroundColor: Color.fromARGB(255, 251, 241, 241),
             ),
           ),
         ]),
-      ]),
-    ));
+      ),
+      floatingActionButton: ExpandableFab(children: [
+        ActionButton(
+          icon: const Icon(
+            Icons.file_upload_sharp,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        ),
+        ActionButton(
+          icon: const Icon(
+            Icons.photo,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            getImage();
+          },
+        ),
+        ActionButton(
+          icon: const Icon(
+            Icons.camera,
+            color: Colors.white,
+          ),
+          onPressed: () {},
+        ),
+      ], distance: 90),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: homeController.selectedPage.value,
+        onTap: (index) {
+          homeController.selectedPage.value = index;
+          switch (index) {
+            case 0:
+              Get.to(() => Dashboard());
+              break;
+            case 1:
+              Get.to(() => Search());
+              break;
+            case 2:
+              Get.to(() => Downloads());
+              break;
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+            ),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search,
+            ),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.download_rounded),
+            label: 'downloads',
+          ),
+        ],
+      ),
+    );
   }
 
-  void showUploadOptions(BuildContext context) {
-    showMenu(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(20)),
-      color: Color.fromARGB(255, 45, 148, 105),
-      context: context,
-      position: RelativeRect.fromLTRB(50, 490, 20, 5),
-      items: [
-        PopupMenuItem(
-          child: ListTile(
-            leading: Icon(Icons.camera_alt),
-            title: Text('Take Photo'),
-            onTap: () {
-              // Handle taking photo
-              Navigator.pop(context); // Close the menu
-              // Add your logic for taking photo here
-            },
-          ),
-        ),
-        PopupMenuItem(
-          child: ListTile(
-            leading: Icon(Icons.photo_library),
-            title: Text('Access Gallery'),
-            onTap: () {
-              // Handle accessing gallery
-              Navigator.pop(context); // Close the menu
-              // Add your logic for accessing gallery here
-            },
-          ),
-        ),
-         PopupMenuItem(
-          child: ListTile(
-            leading: Icon(Icons.photo_library),
-            title: Text('Access Files'),
-            onTap: () {
-              // Handle accessing gallery
-              Navigator.pop(context); // Close the menu
-              // Add your logic for accessing gallery here
-            },
-          ),
-        ),
-        PopupMenuItem(
-          child: ListTile(
-            leading: Icon(Icons.close),
-            title: Text('Cancel'),
-            onTap: () {
-              // Cancel action, do nothing
-              Navigator.pop(context); // Close the menu
-            },
-          ),
-        ),
-      ],
-    );
+  Future<File> getImage() async {
+    final ImagePicker _picker = ImagePicker();
+
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+      return _selectedImage!;
+    } else {
+      throw Exception('Image picking failed');
+    }
+  }
+
+  void uploadPaper() {
+    if (_formKey.currentState!.validate()) {
+      print('Paper Name: ${papernameController.text}');
+      print('Paper Year: ${paperyearController.text}');
+      print('Image: $_selectedImage');
+    }
   }
 }

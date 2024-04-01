@@ -118,7 +118,28 @@ class _UploadState extends State<Upload> {
                       SizedBox(height: 10),
                       CustomButton(
                         onPressed: () {
-                          uploadPaper();
+                          if (_selectedImage != null) {
+                            uploadPaper();
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Image Required"),
+                                  content: Text(
+                                      "Please select an image before uploading."),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("OK"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         },
                         label: ("Upload"),
                         buttonColor: Color.fromARGB(255, 39, 106, 126),

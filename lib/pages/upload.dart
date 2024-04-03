@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:get/get.dart';
@@ -11,6 +13,9 @@ import 'package:public_repo/views/customButton.dart';
 import 'package:public_repo/views/customtext.dart';
 import 'package:public_repo/views/customtextField.dart';
 import 'package:public_repo/views/fab.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'dart:convert';
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -186,26 +191,12 @@ class _UploadState extends State<Upload> {
       floatingActionButton: ExpandableFab(children: [
         ActionButton(
           icon: const Icon(
-            Icons.file_upload_sharp,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        ),
-        ActionButton(
-          icon: const Icon(
             Icons.photo,
             color: Colors.white,
           ),
           onPressed: () {
             getImage();
           },
-        ),
-        ActionButton(
-          icon: const Icon(
-            Icons.camera,
-            color: Colors.white,
-          ),
-          onPressed: () {},
         ),
       ], distance: 90),
       bottomNavigationBar: BottomNavigationBar(
@@ -262,13 +253,63 @@ class _UploadState extends State<Upload> {
     }
   }
 
-
 //function to upload the paper
-  void uploadPaper() {
+  void uploadPaper() async {
     if (_formKey.currentState!.validate()) {
-      print('Paper Name: ${papernameController.text}');
-      print('Paper Year: ${paperyearController.text}');
-      print('Image: $_selectedImage');
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://10.0.2.2:8000/student/upload/'),
+      );
+      var imageFile = await http.MultipartFile.fromPath(
+        'image',
+        _selectedImage!.path,
+        contentType: MediaType('image', 'jpg'),
+      );
+      request.files.add(imageFile);
+      request.fields['name'] = papernameController.text;
+      request.fields['year'] = paperyearController.text;
+
+      // Send the request
+      var response = await request.send();
+      if (response.statusCode == 201) {
+        // Paper uploaded successfully
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Upload Successful"),
+              content: Text("Paper uploaded successfully."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Error occurred while uploading paper
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Upload Failed"),
+              content: Text("Failed to upload paper. Please try again later."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 }

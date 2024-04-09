@@ -14,7 +14,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  bool isPasswordVisible = false;
+  bool isPasswordVisible1 = true;
+  bool isPasswordVisible2 = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -126,13 +127,13 @@ class _SignUpState extends State<SignUp> {
                             controller: passwordController,
                             hintText: "Enter Password",
                             prefixIcon: Icon(Icons.lock),
-                            suffixIcon: Icon(isPasswordVisible
+                            suffixIcon: Icon(isPasswordVisible1
                                 ? Icons.visibility
                                 : Icons.visibility_off),
-                            obscureText: !isPasswordVisible,
+                            obscureText: !isPasswordVisible1,
                             togglePasswordVisibility: () {
                               setState(() {
-                                isPasswordVisible = !isPasswordVisible;
+                                isPasswordVisible1 = !isPasswordVisible1;
                               });
                             },
                             validator: (value) {
@@ -162,15 +163,15 @@ class _SignUpState extends State<SignUp> {
                             controller: confirmpasswordController,
                             hintText: "Confirm Password",
                             prefixIcon: Icon(Icons.lock),
-                            suffixIcon: Icon(isPasswordVisible
+                            suffixIcon: Icon(isPasswordVisible2
                                 ? Icons.visibility
                                 : Icons.visibility_off),
                             togglePasswordVisibility: () {
                               setState(() {
-                                isPasswordVisible = !isPasswordVisible;
+                                isPasswordVisible2 = !isPasswordVisible2;
                               });
                             },
-                            obscureText: !isPasswordVisible,
+                            obscureText: !isPasswordVisible2,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please confirm your password';

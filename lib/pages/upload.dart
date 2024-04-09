@@ -290,6 +290,11 @@ class _UploadState extends State<Upload> {
             );
           },
         );
+        papernameController.clear();
+        paperyearController.clear();
+        setState(() {
+          _selectedImage = null;
+        });
       } else {
         // Error occurred while uploading paper
         showDialog(

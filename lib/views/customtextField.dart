@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? togglePasswordVisibility;
   final FormFieldValidator<String>? validator;
   final TextCapitalization textCapitalization;
+  final ValueChanged<String>? onChanged;
 
   const CustomTextField({
     super.key,
@@ -24,6 +25,7 @@ class CustomTextField extends StatelessWidget {
     this.togglePasswordVisibility,
     this.validator,
     this.textCapitalization = TextCapitalization.none,
+    this.onChanged,
   });
 
   @override
@@ -42,12 +44,13 @@ class CustomTextField extends StatelessWidget {
           hintText: hintText,
           hintStyle: TextStyle(color: hintColor),
           suffixIcon: InkWell(
-            onTap: togglePasswordVisibility, // Call the callback function
+            onTap: () {togglePasswordVisibility!();}, // Call the callback function
             child: suffixIcon,
           ),
           prefixIcon: prefixIcon,
         ),
         validator: validator,
+        onChanged: onChanged,
       ),
     );
   }

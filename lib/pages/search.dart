@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:public_repo/pages/homeNot.dart';
 import 'package:public_repo/views/customButton.dart';
 import 'package:public_repo/views/customtextField.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -22,8 +24,21 @@ class _SearchState extends State<Search> {
       body: Column(
         children: [
           Container(
-            height: 50,
+            height: 100,
+            width: double.infinity,
             color: Color.fromARGB(255, 82, 171, 37),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Text(
+                  "Search for Papers",
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
           ),
           CustomTextField(
             controller: papernameController,
@@ -62,11 +77,23 @@ class _SearchState extends State<Search> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.network(searchResults[index].imageUrl),
+                      Container(
+                          height: 200,
+                          width: double.infinity,
+                          child: Image.network(
+                            searchResults[index].imageUrl,
+                            fit: BoxFit.cover,
+                          )),
                       SizedBox(height: 10),
                       Text(
                         searchResults[index].description,
                         style: TextStyle(fontSize: 16),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          downloadImage(searchResults[index].imageUrl);
+                        },
+                        child: Text("Download"),
                       ),
                     ],
                   ),
@@ -96,7 +123,7 @@ class _SearchState extends State<Search> {
     final String encodedYearQuery = Uri.encodeComponent(yearQuery);
 
     final String endpoint =
-        'http://127.0.0.1:8000/student/search?name=$encodedNameQuery&year=$encodedYearQuery';
+        'http://10.0.2.2:8000/student/search?name=$encodedNameQuery&year=$encodedYearQuery';
 
     try {
       final http.Response response = await http.get(Uri.parse(endpoint));
@@ -116,6 +143,23 @@ class _SearchState extends State<Search> {
     } catch (error) {
       // Handle error
       print('Error: $error');
+    }
+  }
+
+  Future<void> downloadImage(String imageUrl) async {
+    try {
+      final Directory? appDir = await getExternalStorageDirectory();
+      if (appDir != null) {
+        final http.Response response = await http.get(Uri.parse(imageUrl));
+        final String fileName = imageUrl.split('/').last;
+        final File file = File('${appDir.path}/$fileName');
+        await file.writeAsBytes(response.bodyBytes);
+        print('Image downloaded successfully');
+      } else {
+        print('Unable to get external storage directory');
+      }
+    } catch (error) {
+      print('Error downloading image: $error');
     }
   }
 }

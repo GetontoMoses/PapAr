@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:public_repo/pages/homeNot.dart';
+import 'package:public_repo/views/image_preview.dart';
 
 class Downloads extends StatefulWidget {
   const Downloads({Key? key}) : super(key: key);
@@ -67,7 +68,7 @@ class _DownloadsState extends State<Downloads> {
       body: Column(
         children: [
           Container(
-            height: 100,
+            height: 90,
             width: double.infinity,
             color: Color.fromARGB(255, 42, 125, 148),
             child: Center(
@@ -92,25 +93,38 @@ class _DownloadsState extends State<Downloads> {
                     : ListView.builder(
                         itemCount: downloadedImages.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                              vertical: 8.0,
-                              horizontal: 16.0,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: ListTile(
-                              leading: Image.file(downloadedImages[index]),
-                              title: Text(
-                                downloadedImages[index].path.split('/').last,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ImagePreviewPage(
+                                    images: downloadedImages,
+                                    initialIndex: index,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                vertical: 8.0,
+                                horizontal: 16.0,
                               ),
-                              trailing: IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  deleteFile(downloadedImages[index]);
-                                },
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: ListTile(
+                                leading: Image.file(downloadedImages[index]),
+                                title: Text(
+                                  downloadedImages[index].path.split('/').last,
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    deleteFile(downloadedImages[index]);
+                                  },
+                                ),
                               ),
                             ),
                           );

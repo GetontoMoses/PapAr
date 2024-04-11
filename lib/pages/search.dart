@@ -7,6 +7,8 @@ import 'package:public_repo/views/customtextField.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
 class Search extends StatefulWidget {
   const Search({super.key});
 
@@ -24,7 +26,7 @@ class _SearchState extends State<Search> {
       body: Column(
         children: [
           Container(
-            height: 100,
+            height: 90,
             width: double.infinity,
             color: Color.fromARGB(255, 82, 171, 37),
             child: Center(
@@ -39,6 +41,9 @@ class _SearchState extends State<Search> {
                 ),
               ),
             ),
+          ),
+          SizedBox(
+            height: 10,
           ),
           CustomTextField(
             controller: papernameController,
@@ -78,22 +83,33 @@ class _SearchState extends State<Search> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                          height: 200,
-                          width: double.infinity,
-                          child: Image.network(
-                            searchResults[index].imageUrl,
-                            fit: BoxFit.cover,
-                          )),
-                      SizedBox(height: 10),
-                      Text(
-                        searchResults[index].description,
-                        style: TextStyle(fontSize: 16),
+                        height: 200,
+                        width: double.infinity,
+                        child: searchResults[index].pdfUrl != null
+                            ? SfPdfViewer.network(
+                                searchResults[index].pdfUrl,
+                              )
+                            : Center(
+                                child: Text('PDF URL is null'),
+                              ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          downloadImage(searchResults[index].imageUrl);
-                        },
-                        child: Text("Download"),
+                      SizedBox(height: 10),
+                      Center(
+                        child: Text(
+                          searchResults[index].description,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            downloadImage(searchResults[index].pdfUrl);
+                          },
+                          child: Text("Download"),
+                        ),
                       ),
                     ],
                   ),
@@ -106,14 +122,6 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Widget _buildContent(SearchResult result) {
-    if (result.imageUrl.toLowerCase().endsWith('.pdf')) {
-      return Text('PDF: ${result.imageUrl}');
-    } else {
-      return Image.network(result.imageUrl);
-    }
-  }
-
   Future<void> searchItems() async {
     final String nameQuery = papernameController.text;
     final String yearQuery = paperyearController.text;
@@ -123,7 +131,7 @@ class _SearchState extends State<Search> {
     final String encodedYearQuery = Uri.encodeComponent(yearQuery);
 
     final String endpoint =
-        'http://10.0.2.2:8000/student/search?name=$encodedNameQuery&year=$encodedYearQuery';
+        'http://10.0.2.2:8000/student/search/?name=$encodedNameQuery&year=$encodedYearQuery';
 
     try {
       final http.Response response = await http.get(Uri.parse(endpoint));
@@ -131,11 +139,15 @@ class _SearchState extends State<Search> {
       if (response.statusCode == 200) {
         // Handle successful response
         final List<dynamic> data = json.decode(response.body);
-        setState(() {
-          // Update the searchResults list with parsed data
-          searchResults =
-              data.map((json) => SearchResult.fromJson(json)).toList();
-        });
+
+        if (mounted) {
+          // Check if the widget is mounted
+          setState(() {
+            // Update the searchResults list with parsed data
+            searchResults =
+                data.map((json) => SearchResult.fromJson(json)).toList();
+          });
+        }
       } else {
         // Handle error response
         throw Exception('Failed to load items');
@@ -154,9 +166,22 @@ class _SearchState extends State<Search> {
         final String fileName = imageUrl.split('/').last;
         final File file = File('${appDir.path}/$fileName');
         await file.writeAsBytes(response.bodyBytes);
-        print('Image downloaded successfully');
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File downloaded successfully'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
+          ),
+        );
       } else {
-        print('Unable to get external storage directory');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Unable to get external storage directory'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Color.fromARGB(255, 230, 72, 61),
+          ),
+        );
       }
     } catch (error) {
       print('Error downloading image: $error');
@@ -165,15 +190,15 @@ class _SearchState extends State<Search> {
 }
 
 class SearchResult {
-  final String imageUrl;
+  final String pdfUrl;
   final String description;
 
-  SearchResult({required this.imageUrl, required this.description});
+  SearchResult({required this.pdfUrl, required this.description});
 
   factory SearchResult.fromJson(Map<String, dynamic> json) {
     return SearchResult(
-      imageUrl: json['image'],
-      description: json['name'],
+      pdfUrl: json['file'] ?? '',
+      description: json['name'] ?? '',
     );
   }
 }

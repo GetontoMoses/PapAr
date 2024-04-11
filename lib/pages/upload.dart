@@ -8,14 +8,13 @@ import 'package:public_repo/pages/dashboard.dart';
 import 'package:public_repo/pages/downloads.dart';
 import 'package:public_repo/pages/homeNot.dart';
 import 'package:public_repo/pages/search.dart';
-import 'package:public_repo/views/action.dart';
 import 'package:public_repo/views/customButton.dart';
 import 'package:public_repo/views/customtext.dart';
 import 'package:public_repo/views/customtextField.dart';
-import 'package:public_repo/views/fab.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'dart:convert';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -25,7 +24,7 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  File? _selectedImage;
+  File? _selectedFile;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController papernameController = TextEditingController();
   final TextEditingController paperyearController = TextEditingController();
@@ -121,7 +120,7 @@ class _UploadState extends State<Upload> {
                       SizedBox(height: 10),
                       CustomButton(
                         onPressed: () {
-                          if (_selectedImage != null) {
+                          if (_selectedFile != null) {
                             uploadPaper();
                           } else {
                             showDialog(
@@ -177,10 +176,10 @@ class _UploadState extends State<Upload> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
-                child: _selectedImage != null
-                    ? Image.file(_selectedImage!)
+                child: _selectedFile != null
+                    ?  SfPdfViewer.file(_selectedFile!)
                     : Text(
-                        'No image selected',
+                        'No PDF selected',
                         style: TextStyle(fontSize: 20),
                       ),
               ),
@@ -188,17 +187,14 @@ class _UploadState extends State<Upload> {
           ),
         ]),
       ),
-      floatingActionButton: ExpandableFab(children: [
-        ActionButton(
-          icon: const Icon(
-            Icons.photo,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            getImage();
-          },
-        ),
-      ], distance: 90),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromARGB(255, 39, 106, 126),
+        foregroundColor: Colors.white,
+        onPressed: () {
+          getFile();
+        },
+        child: Icon(Icons.add),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: homeController.selectedPage.value,
         onTap: (index) {
@@ -237,19 +233,15 @@ class _UploadState extends State<Upload> {
     );
   }
 
-//function to access the gallery and select an image
-  Future<File> getImage() async {
-    final ImagePicker _picker = ImagePicker();
+//function to access the gallery and select a pdf file
+  Future<void> getFile() async {
+    final XFile? file = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, maxWidth: 512);
 
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
+    if (file != null) {
       setState(() {
-        _selectedImage = File(image.path);
+        _selectedFile = File(file.path);
       });
-      return _selectedImage!;
-    } else {
-      throw Exception('Image picking failed');
     }
   }
 
@@ -260,12 +252,13 @@ class _UploadState extends State<Upload> {
         'POST',
         Uri.parse('http://10.0.2.2:8000/student/upload/'),
       );
-      var imageFile = await http.MultipartFile.fromPath(
-        'image',
-        _selectedImage!.path,
-        contentType: MediaType('image', 'jpg'),
+      var filePart = await http.MultipartFile.fromPath(
+        'file',
+        _selectedFile!.path,
+        contentType: MediaType('application', 'pdf'),
       );
-      request.files.add(imageFile);
+      request.files.add(filePart);
+
       request.fields['name'] = papernameController.text;
       request.fields['year'] = paperyearController.text;
 
@@ -293,7 +286,7 @@ class _UploadState extends State<Upload> {
         papernameController.clear();
         paperyearController.clear();
         setState(() {
-          _selectedImage = null;
+          _selectedFile = null;
         });
       } else {
         // Error occurred while uploading paper

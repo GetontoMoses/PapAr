@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:public_repo/pages/homeNot.dart';
-import 'package:public_repo/views/image_preview.dart';
+import 'package:public_repo/views/filepreview.dart';
 
 class Downloads extends StatefulWidget {
   const Downloads({Key? key}) : super(key: key);
@@ -12,13 +12,13 @@ class Downloads extends StatefulWidget {
 }
 
 class _DownloadsState extends State<Downloads> {
-  List<File> downloadedImages = [];
+  List<File> downloadedFiles = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    loadDownloadedImages();
+    loadDownloadedFiles();
   }
 
   @override
@@ -27,12 +27,16 @@ class _DownloadsState extends State<Downloads> {
     // Dispose any resources here if necessary
   }
 
-  Future<void> loadDownloadedImages() async {
+  Future<void> loadDownloadedFiles() async {
     try {
       final Directory? appDir = await getExternalStorageDirectory();
       if (appDir != null) {
         final List<FileSystemEntity> files = appDir.listSync();
-        downloadedImages = files.whereType<File>().toList();
+        downloadedFiles = files.whereType<File>().toList();
+        // Filter out only PDF files
+        downloadedFiles = downloadedFiles.where((file) {
+          return file.path.toLowerCase().endsWith('.pdf');
+        }).toList();
       } else {
         print('Unable to get external storage directory');
       }
@@ -49,7 +53,7 @@ class _DownloadsState extends State<Downloads> {
     try {
       await file.delete();
       setState(() {
-        downloadedImages.remove(file); // Update UI
+        downloadedFiles.remove(file); // Update UI
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -88,18 +92,18 @@ class _DownloadsState extends State<Downloads> {
           Expanded(
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
-                : downloadedImages.isEmpty
+                : downloadedFiles.isEmpty
                     ? Center(child: Text('No downloaded items'))
                     : ListView.builder(
-                        itemCount: downloadedImages.length,
+                        itemCount: downloadedFiles.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ImagePreviewPage(
-                                    images: downloadedImages,
+                                  builder: (context) => PdfPreviewPage(
+                                    pdfFiles: downloadedFiles,
                                     initialIndex: index,
                                   ),
                                 ),
@@ -115,14 +119,14 @@ class _DownloadsState extends State<Downloads> {
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               child: ListTile(
-                                leading: Image.file(downloadedImages[index]),
+                                leading: Icon(Icons.picture_as_pdf),
                                 title: Text(
-                                  downloadedImages[index].path.split('/').last,
+                                  downloadedFiles[index].path.split('/').last,
                                 ),
                                 trailing: IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () {
-                                    deleteFile(downloadedImages[index]);
+                                    deleteFile(downloadedFiles[index]);
                                   },
                                 ),
                               ),

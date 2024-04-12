@@ -76,8 +76,8 @@ class MyDrawer extends StatelessWidget {
               ),
               child: ListTile(
                 leading: Icon(Icons.star),
-                title: CustomText(label: "Starred"),
-                onTap: () => Navigator.of(context).pushNamed("/starred"),
+                title: CustomText(label: "My uploads"),
+                onTap: () => Navigator.of(context).pushNamed("/uploads"),
               ),
             ),
             Divider(

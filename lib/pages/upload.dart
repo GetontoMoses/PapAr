@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:public_repo/pages/dashboard.dart';
 import 'package:public_repo/pages/downloads.dart';
 import 'package:public_repo/pages/homeNot.dart';
+import 'package:public_repo/pages/myuploads.dart';
 import 'package:public_repo/pages/search.dart';
 import 'package:public_repo/views/customButton.dart';
 import 'package:public_repo/views/customtext.dart';
@@ -27,6 +28,9 @@ class _UploadState extends State<Upload> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController papernameController = TextEditingController();
   final TextEditingController paperyearController = TextEditingController();
+
+  List<UploadedFile> uploadedFiles = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -286,6 +290,19 @@ class _UploadState extends State<Upload> {
       var response = await request.send();
       if (response.statusCode == 201) {
         // Paper uploaded successfully
+        uploadedFiles.add(UploadedFile(
+          fileName: papernameController.text,
+          filePath: _selectedFile!.path,
+          uploadDate: DateTime.now(),
+        ));
+
+        // Navigate to the "My Uploads" page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyUploads(),
+          ),
+        );
         showDialog(
           context: context,
           builder: (BuildContext context) {

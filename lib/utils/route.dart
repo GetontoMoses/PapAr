@@ -3,7 +3,7 @@ import 'package:public_repo/pages/help.dart';
 import 'package:public_repo/pages/privacy.dart';
 import 'package:public_repo/pages/profile.dart';
 import 'package:public_repo/pages/settings.dart';
-import 'package:public_repo/pages/starred.dart';
+import 'package:public_repo/pages/myuploads.dart';
 import 'package:public_repo/pages/dashboard.dart';
 import "package:get/get.dart";
 import 'package:public_repo/pages/downloads.dart';
@@ -21,7 +21,7 @@ class Routes {
     GetPage(name: '/dashboard', page: () => Dashboard()),
     GetPage(name: '/search', page: () => Search()),
     GetPage(name: '/downloads', page: () => Downloads()),
-    GetPage(name: '/starrred', page: () => Starred()),
+    GetPage(name: '/uploads', page: () => MyUploads()),
     GetPage(name: '/settings', page: () => Settings()),
     GetPage(name: '/about', page: () => About()),
     GetPage(name: '/help', page: () => Help()),

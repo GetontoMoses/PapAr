@@ -15,7 +15,6 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
 
@@ -127,9 +126,9 @@ class _UploadState extends State<Upload> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Image Required"),
+                                  title: Center(child: Text("File Required")),
                                   content: Text(
-                                      "Please select an image before uploading."),
+                                      "Please select a pdf file before uploading."),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
@@ -177,7 +176,7 @@ class _UploadState extends State<Upload> {
               ),
               child: Center(
                 child: _selectedFile != null
-                    ?  SfPdfViewer.file(_selectedFile!)
+                    ? SfPdfViewer.file(_selectedFile!)
                     : Text(
                         'No PDF selected',
                         style: TextStyle(fontSize: 20),
@@ -239,9 +238,30 @@ class _UploadState extends State<Upload> {
         .pickImage(source: ImageSource.gallery, maxWidth: 512);
 
     if (file != null) {
-      setState(() {
-        _selectedFile = File(file.path);
-      });
+      if (file.path.toLowerCase().endsWith('.pdf')) {
+        setState(() {
+          _selectedFile = File(file.path);
+        });
+      }
+    } else {
+      // Show an alert dialog if the selected file is not a PDF
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Invalid File"),
+            content: Text("Please select a PDF file."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

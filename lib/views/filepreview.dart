@@ -12,7 +12,6 @@ class PdfPreviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final File pdfFile = pdfFiles[initialIndex];
-    print('PDF File Path: ${pdfFile.path}'); // Debugging output
 
     return Scaffold(
       appBar: AppBar(),

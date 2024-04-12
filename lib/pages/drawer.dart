@@ -125,10 +125,11 @@ class MyDrawer extends StatelessWidget {
                 left: MediaQuery.of(context).size.width * 0.08,
               ),
               child: ListTile(
-                leading: Icon(Icons.exit_to_app),
-                title: CustomText(label: "Sign Out"),
-                onTap: () => Navigator.of(context).pushNamed("/"),
-              ),
+                  leading: Icon(Icons.exit_to_app),
+                  title: CustomText(label: "Sign Out"),
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, "/");
+                  }),
             ),
           ],
         ),

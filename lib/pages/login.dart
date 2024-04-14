@@ -5,6 +5,7 @@ import 'package:public_repo/views/customButton.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -235,7 +236,23 @@ class _LoginState extends State<Login> {
 
         //  ifis successful
         if (response.statusCode == 200) {
-          navigateToDashboard();
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          final String? accessToken = responseData['access_token'];
+
+          if (accessToken != null) {
+            // Token extraction successful
+             // Store access token locally
+            await _saveAccessToken(accessToken);
+            print('Access Token: $accessToken');
+
+            // Navigate to dashboard
+            navigateToDashboard();
+          } else {
+            // No token found in response
+            print('No access token found in response');
+            // Display error message to the user
+            // showDialog(...);
+          }
         } else {
           print('Failed to login: ${response.body}');
           // Display error message to the user
@@ -265,6 +282,15 @@ class _LoginState extends State<Login> {
         // showDialog(...);
       }
     }
+  }
+   Future<void> _saveAccessToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('access_token', token);
+  }
+
+  Future<String?> _getAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token');
   }
 
   bool _isValidEmail(String email) {

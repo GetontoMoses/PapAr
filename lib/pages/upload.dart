@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:get/get.dart';
@@ -15,6 +13,7 @@ import 'package:public_repo/views/customtextField.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -24,6 +23,30 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
+  late String _accessToken;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAccessToken(); // Load access token when widget initializes
+  }
+
+  Future<void> _loadAccessToken() async {
+    String? token = await _getAccessToken();
+    if (token != null) {
+      setState(() {
+        _accessToken = token;
+      });
+    } else {
+      // Handle case where token is not found
+    }
+  }
+   Future<String?> _getAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token');
+  }
+
+
   File? _selectedFile;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController papernameController = TextEditingController();
@@ -272,78 +295,84 @@ class _UploadState extends State<Upload> {
 //function to upload the paper
   void uploadPaper() async {
     if (_formKey.currentState!.validate()) {
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('http://10.0.2.2:8000/student/upload/'),
-      );
-      var filePart = await http.MultipartFile.fromPath(
-        'file',
-        _selectedFile!.path,
-        contentType: MediaType('application', 'pdf'),
-      );
-      request.files.add(filePart);
-
-      request.fields['name'] = papernameController.text;
-      request.fields['year'] = paperyearController.text;
-
-      // Send the request
-      var response = await request.send();
-      if (response.statusCode == 201) {
-        // Paper uploaded successfully
-        uploadedFiles.add(UploadedFile(
-          fileName: papernameController.text,
-          filePath: _selectedFile!.path,
-          uploadDate: DateTime.now(),
-        ));
-
-        // Navigate to the "My Uploads" page
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyUploads(),
-          ),
+      if (_accessToken.isNotEmpty) {
+        var request = http.MultipartRequest(
+          'POST',
+          Uri.parse('http://10.0.2.2:8000/student/upload/'),
         );
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Upload Successful"),
-              content: Text("Paper uploaded successfully."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
+        //adding JWT token to the request header
+        request.headers['Authorization'] = 'Bearer $_accessToken';
+
+        var filePart = await http.MultipartFile.fromPath(
+          'file',
+          _selectedFile!.path,
+          contentType: MediaType('application', 'pdf'),
         );
-        papernameController.clear();
-        paperyearController.clear();
-        setState(() {
-          _selectedFile = null;
-        });
-      } else {
-        // Error occurred while uploading paper
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Upload Failed"),
-              content: Text("Failed to upload paper. Please try again later."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+        request.files.add(filePart);
+
+        request.fields['name'] = papernameController.text;
+        request.fields['year'] = paperyearController.text;
+
+        // Send the request
+        var response = await request.send();
+        if (response.statusCode == 201) {
+          // Paper uploaded successfully
+          uploadedFiles.add(UploadedFile(
+            fileName: papernameController.text,
+            filePath: _selectedFile!.path,
+            uploadDate: DateTime.now(),
+          ));
+
+          // Navigate to the "My Uploads" page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyUploads(),
+            ),
+          );
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Upload Successful"),
+                content: Text("Paper uploaded successfully."),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+          papernameController.clear();
+          paperyearController.clear();
+          setState(() {
+            _selectedFile = null;
+          });
+        } else {
+          // Error occurred while uploading paper
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Upload Failed"),
+                content:
+                    Text("Failed to upload paper. Please try again later."),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
     }
   }

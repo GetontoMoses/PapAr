@@ -212,7 +212,7 @@ class _LoginState extends State<Login> {
       final String email = emailController.text;
       final String password = passwordController.text;
 
-      // Your login API endpoint URL
+      // login API endpoint URL
       final String apiUrl = 'http://10.0.2.2:8000/student/login/';
 
       // Prepare the login data
@@ -237,22 +237,11 @@ class _LoginState extends State<Login> {
         //  ifis successful
         if (response.statusCode == 200) {
           final Map<String, dynamic> responseData = json.decode(response.body);
-          final String? accessToken = responseData['access_token'];
-
-          if (accessToken != null) {
-            // Token extraction successful
-             // Store access token locally
-            await _saveAccessToken(accessToken);
-            print('Access Token: $accessToken');
-
-            // Navigate to dashboard
-            navigateToDashboard();
-          } else {
-            // No token found in response
-            print('No access token found in response');
-            // Display error message to the user
-            // showDialog(...);
-          }
+           var userId = responseData['user_id'];
+           print('user id $userId');
+           await saveUserId(userId);
+          // Navigate to the dashboard page
+          navigateToDashboard();
         } else {
           print('Failed to login: ${response.body}');
           // Display error message to the user
@@ -283,14 +272,14 @@ class _LoginState extends State<Login> {
       }
     }
   }
-   Future<void> _saveAccessToken(String token) async {
+  Future<void> saveUserId(int userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('access_token', token);
+    await prefs.setInt('userId', userId);
   }
 
-  Future<String?> _getAccessToken() async {
+  Future<int?> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token');
+    return prefs.getInt('userId');
   }
 
   bool _isValidEmail(String email) {

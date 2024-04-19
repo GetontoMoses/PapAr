@@ -270,7 +270,7 @@ class _SignUpState extends State<SignUp> {
 
           // Delay navigation to dashboard by 2 seconds (adjust as needed)
           await Future.delayed(Duration(seconds: 1));
-          navigateToDashboard();
+          navigateToLogin();
         } else {
           // Handle other status codes (e.g., display error message)
           print('Failed to register: ${response.body}');

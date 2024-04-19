@@ -305,7 +305,7 @@ class _UploadState extends State<Upload> {
         contentType: MediaType('application', 'pdf'),
       );
       request.files.add(filePart);
-      
+
       request.fields['name'] = papernameController.text;
       request.fields['year'] = paperyearController.text;
       request.fields['user'] = userId.toString();
@@ -324,6 +324,12 @@ class _UploadState extends State<Upload> {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyUploads(),
+                      ),
+                    );
                   },
                   child: Text("OK"),
                 ),
@@ -358,6 +364,7 @@ class _UploadState extends State<Upload> {
       }
     }
   }
+
   Future<void> saveUserId(int userId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('userId', userId);

@@ -1,6 +1,5 @@
 import 'package:public_repo/pages/about.dart';
 import 'package:public_repo/pages/help.dart';
-import 'package:public_repo/pages/privacy.dart';
 import 'package:public_repo/pages/profile.dart';
 import 'package:public_repo/pages/settings.dart';
 import 'package:public_repo/pages/myuploads.dart';

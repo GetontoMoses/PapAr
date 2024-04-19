@@ -41,18 +41,16 @@ class _UploadState extends State<Upload> {
       // Handle case where token is not found
     }
   }
-   Future<String?> _getAccessToken() async {
+
+  Future<String?> _getAccessToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('access_token');
   }
-
 
   File? _selectedFile;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController papernameController = TextEditingController();
   final TextEditingController paperyearController = TextEditingController();
-
-  List<UploadedFile> uploadedFiles = [];
 
   @override
   Widget build(BuildContext context) {
@@ -294,86 +292,79 @@ class _UploadState extends State<Upload> {
 
 //function to upload the paper
   void uploadPaper() async {
+    int? userId = await getUserId();
     if (_formKey.currentState!.validate()) {
-      if (_accessToken.isNotEmpty) {
-        var request = http.MultipartRequest(
-          'POST',
-          Uri.parse('http://10.0.2.2:8000/student/upload/'),
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://10.0.2.2:8000/student/upload/'),
+      );
+
+      var filePart = await http.MultipartFile.fromPath(
+        'file',
+        _selectedFile!.path,
+        contentType: MediaType('application', 'pdf'),
+      );
+      request.files.add(filePart);
+      
+      request.fields['name'] = papernameController.text;
+      request.fields['year'] = paperyearController.text;
+      request.fields['user'] = userId.toString();
+
+      // Send the request
+      var response = await request.send();
+      if (response.statusCode == 201) {
+        // Paper uploaded successfully
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Upload Successful"),
+              content: Text("Paper uploaded successfully."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
         );
-        //adding JWT token to the request header
-        request.headers['Authorization'] = 'Bearer $_accessToken';
-
-        var filePart = await http.MultipartFile.fromPath(
-          'file',
-          _selectedFile!.path,
-          contentType: MediaType('application', 'pdf'),
+        papernameController.clear();
+        paperyearController.clear();
+        setState(() {
+          _selectedFile = null;
+        });
+      } else {
+        // Error occurred while uploading paper
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Upload Failed"),
+              content: Text("Failed to upload paper. Please try again later."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
         );
-        request.files.add(filePart);
-
-        request.fields['name'] = papernameController.text;
-        request.fields['year'] = paperyearController.text;
-
-        // Send the request
-        var response = await request.send();
-        if (response.statusCode == 201) {
-          // Paper uploaded successfully
-          uploadedFiles.add(UploadedFile(
-            fileName: papernameController.text,
-            filePath: _selectedFile!.path,
-            uploadDate: DateTime.now(),
-          ));
-
-          // Navigate to the "My Uploads" page
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyUploads(),
-            ),
-          );
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Upload Successful"),
-                content: Text("Paper uploaded successfully."),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("OK"),
-                  ),
-                ],
-              );
-            },
-          );
-          papernameController.clear();
-          paperyearController.clear();
-          setState(() {
-            _selectedFile = null;
-          });
-        } else {
-          // Error occurred while uploading paper
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Upload Failed"),
-                content:
-                    Text("Failed to upload paper. Please try again later."),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("OK"),
-                  ),
-                ],
-              );
-            },
-          );
-        }
       }
     }
+  }
+  Future<void> saveUserId(int userId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('userId', userId);
+  }
+
+  Future<int?> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('userId');
   }
 }

@@ -171,7 +171,9 @@ class _DashboardState extends State<Dashboard> {
                 : downloadedFiles.isEmpty
                     ? Center(child: Text('No recent items'))
                     : ListView.builder(
-                        itemCount: downloadedFiles.length,
+                        itemCount: downloadedFiles.length > 4
+                            ? 4
+                            : downloadedFiles.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Dismissible(
                             key: Key(downloadedFiles[index].path),
@@ -218,7 +220,7 @@ class _DashboardState extends State<Dashboard> {
                           );
                         },
                       ),
-          ),
+          )
         ],
       ),
     );

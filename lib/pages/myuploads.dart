@@ -53,10 +53,24 @@ class _MyUploadsState extends State<MyUploads> {
           Container(
             height: 100,
             color: Color.fromARGB(255, 39, 176, 171),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Text(
+                  'My Uploads',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
           SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
+              padding: const EdgeInsets.all(0),
               itemCount: uploadedFiles.length,
               itemBuilder: (context, index) {
                 final file = uploadedFiles[index];
@@ -69,12 +83,7 @@ class _MyUploadsState extends State<MyUploads> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => UploadDetail(
-                          initialFile: file,
-                          onUpdate: (updatedFile) {
-                            setState(() {
-                              uploadedFiles[index] = updatedFile;
-                            });
-                          },
+                         uploadId: file['id'],
                         ),
                       ),
                     );
@@ -89,17 +98,15 @@ class _MyUploadsState extends State<MyUploads> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => UploadDetail(
-                              initialFile: file,
-                              onUpdate: (updatedFile) {
-                                setState(() {
-                                  uploadedFiles[index] = updatedFile;
-                                });
-                              },
+                              uploadId: file['id'],
                             ),
                           ),
                         );
                       },
                       child: Text('Edit'),
+                    ),
+                    SizedBox(
+                      width: 30,
                     ),
                     ElevatedButton(
                       onPressed: () {

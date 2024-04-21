@@ -85,16 +85,7 @@ class MyDrawer extends StatelessWidget {
               thickness: 0.6,
               height: 20,
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.08,
-              ),
-              child: ListTile(
-                leading: Icon(Icons.settings),
-                title: CustomText(label: "Settings"),
-                onTap: () => Navigator.of(context).pushNamed("/settings"),
-              ),
-            ),
+           
             Padding(
               padding: EdgeInsets.only(
                 left: MediaQuery.of(context).size.width * 0.08,

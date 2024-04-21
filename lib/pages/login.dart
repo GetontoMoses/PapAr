@@ -238,8 +238,11 @@ class _LoginState extends State<Login> {
         if (response.statusCode == 200) {
           final Map<String, dynamic> responseData = json.decode(response.body);
            var userId = responseData['user_id'];
+           var username = responseData['username'];
+
            print('user id $userId');
-           await saveUserId(userId);
+           print("Login successful: $responseData");
+           await saveUserData(userId, username);
           // Navigate to the dashboard page
           navigateToDashboard();
         } else {
@@ -272,14 +275,21 @@ class _LoginState extends State<Login> {
       }
     }
   }
-  Future<void> saveUserId(int userId) async {
+   Future<void> saveUserData(int userId, String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('userId', userId);
+    await prefs.setString(
+        'username', username); // Save username to shared preferences
   }
 
   Future<int?> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt('userId');
+  }
+
+  Future<String?> getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
   }
 
   bool _isValidEmail(String email) {

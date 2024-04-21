@@ -111,17 +111,23 @@ class MyDrawer extends StatelessWidget {
               thickness: 0.6,
               height: 20,
             ),
-            Padding(
+          Padding(
               padding: EdgeInsets.only(
                 left: MediaQuery.of(context).size.width * 0.08,
               ),
               child: ListTile(
-                  leading: Icon(Icons.exit_to_app),
-                  title: CustomText(label: "Sign Out"),
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, "/");
-                  }),
+                leading: Icon(Icons.exit_to_app),
+                title: CustomText(label: "Sign Out"),
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    "/",
+                    (route) => false, // Remove all routes from the stack
+                  );
+                },
+              ),
             ),
+
           ],
         ),
       ),
